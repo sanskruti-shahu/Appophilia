@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.1
-
   transformer_page_view: ^0.1.6
   smooth_page_indicator: ^0.2.3
   flutter_inner_drawer: ^1.0.0+1
@@ -33,12 +32,12 @@ dependencies:
   material_floating_search_bar: ^0.3.3
   form_field_validator: ^1.1.0
   sliver_tools: ^0.2.1
+  newsapi: ^2.0.0
 
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

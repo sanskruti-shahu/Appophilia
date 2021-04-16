@@ -1,5 +1,6 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapi/newsapi.dart';
 import 'package:octopus_news/views/ui/listofimage.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -12,10 +13,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: MainPage(),
     );
   }
@@ -26,9 +23,16 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
+  var newsApi = NewsApi(
+    debugLog: true,
+    apiKey: '739327659a9c45f5b187578a3b7fcdb1',
+  );
+
   ScrollController _scrollController;
   TabController _tabController;
+  int currentIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -43,136 +47,177 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     );
     setState(() {});
   }
+
+  void changePage(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
   @override
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
+
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-          body: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, value) {
-          return [
-            SliverAppBar(
-              floating: false,
-              pinned: false,
-              expandedHeight: 50,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          shadowColor: Colors.white,
+          title: Text(
+            "Octopus",
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold
             ),
-            SliverAppBar(
-              leading: Container(),
-              expandedHeight: 250.0,
-              floating: false,
-              pinned: true,
-            ),
-            SliverPinnedHeader(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: TabBar(
-                    indicator: BubbleTabIndicator(
-                      indicatorHeight: 45,
-                      indicatorRadius: 10,
-                      insets: EdgeInsets.only(left: 30, right: 30),
-                      indicatorColor: Colors.black12,
-                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                    ),
-                    overlayColor:
-                    MaterialStateProperty.all(Colors.transparent),
-                    enableFeedback: true,
-                    controller: _tabController,
-                    tabs: [
-                      Tab(
-                        child:Text("Latest news")
-                        ),
-                      Tab(
-                        child: Text("Activities")
+          ),
+          backgroundColor: Colors.white,
+          actionsIconTheme: IconThemeData(
+            color: Colors.black
+          ),
+          actions: [
+            Container(
+              child: Icon(Icons.calendar_today_outlined),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+              ),
+            )
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: NestedScrollView(
+            controller: _scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(
+                  child: Container(
+                    child: Text(
+                      "Hello,",
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
                   ),
                 ),
-                color: Colors.white,
-              ),
-
-            )
-          ];
-        },
-        body: Container(
-          child: TabBarView(
-          controller: _tabController,
-            children: [
-              ListView.builder(
-                itemCount: LatestnewsImages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding:
-                    EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                    height: 240,
-                    width: double.infinity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(LatestnewsImages[index]),
-                            fit: BoxFit.fill
+                SliverToBoxAdapter(
+                  child: Container(
+                    child: Text("Mariah Carey",style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  ),
+                ),
+                SliverPinnedHeader(
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: TabBar(
+                        indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.blueAccent,
                         ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15.0),
-                        ),
+                        enableFeedback: true,
+                        controller: _tabController,
+                        tabs: [
+                          Tab(
+                            child: Text('Hello'),
+                          ),
+                          Tab(
+                            child: Text('Hello')
+                          ),
+                          Tab(
+                            child: Text("Hello"),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
-              ListView.builder(
-                itemCount: LatestnewsImages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding:
-                    EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                    height: 240,
-                    width: double.infinity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(LatestnewsImages[index]),
-                            fit: BoxFit.fill),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15.0),
+                  ),
+                ),
+              ];
+            },
+            body: Container(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding:
+                        EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        height: 240,
+                        width: double.infinity,
+                        child: Container(
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage('https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'),
+                                fit: BoxFit.fill),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15.0),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              ListView.builder(
-                itemCount: LatestnewsImages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding:
-                    EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                    height: 240,
-                    width: double.infinity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(LatestnewsImages[index]),
-                            fit: BoxFit.fill),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15.0),
+                      );
+                    },
+                  ),
+                  ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding:
+                        EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        height: 240,
+                        width: double.infinity,
+                        child: Container(
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage('https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'),
+                                fit: BoxFit.fill),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15.0),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                  ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding:
+                        EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        height: 240,
+                        width: double.infinity,
+                        child: Container(
+                          height: 300,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage('https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'),
+                                fit: BoxFit.fill),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-    )
-    ),
+      ),
     );
   }
 }
-
